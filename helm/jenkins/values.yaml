@@ -4,3 +4,6 @@ image:
 
 persistence:
   size: 10Gi
+
+ingress:
+  enabled: true
