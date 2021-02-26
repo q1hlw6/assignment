@@ -28,6 +28,8 @@ locals {
 
   cluster_name    = var.project_name
   cluster_version = "1.19"
+
+  eks_asg_max_size = 1
 }
 
 module "vpc" {
@@ -40,6 +42,10 @@ module "vpc" {
   azs             = data.aws_availability_zones.all.names
   private_subnets = local.vpc_private_subnets
   public_subnets  = local.vpc_public_subnets
+
+  enable_dns_hostnames = true
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
 }
 
 module "eks" {
@@ -51,6 +57,16 @@ module "eks" {
 
   vpc_id  = module.vpc.vpc_id
   subnets = module.vpc.private_subnets
+
+  # TODO extract to variables
+  worker_groups = [
+    {
+      instance_type    = "t2.medium"
+      root_volume_type = "gp2"
+
+      asg_max_size = local.eks_asg_max_size
+    }
+  ]
 
   write_kubeconfig = false
 }
