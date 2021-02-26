@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: "{{ .Release.Name }}-master"
+  labels:
+    app.kubernetes.io/name: jenkins
+    app.kubernetes.io/instance: "{{ .Release.Name }}"
+    app.kubernetes.io/component: master
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app.kubernetes.io/instance: "{{ .Release.Name }}"
+      app.kubernetes.io/component: master
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: jenkins
+        app.kubernetes.io/instance: "{{ .Release.Name }}"
+        app.kubernetes.io/component: master
+    spec:
+      securityContext:
+        fsGroup: 1000
+      volumes:
+        - name: jenkins-home
+          persistentVolumeClaim:
+            claimName: "{{ .Release.Name }}-home"
+      containers:
+        - name: jenkins
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          volumeMounts:
+            # see https://github.com/jenkinsci/docker/blob/master/README.md#usage
+            - mountPath: "/var/jenkins_home"
+              name: jenkins-home

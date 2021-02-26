@@ -1,0 +1,6 @@
+image:
+  repository: jenkins/jenkins
+  tag: lts
+
+persistence:
+  size: 10Gi
