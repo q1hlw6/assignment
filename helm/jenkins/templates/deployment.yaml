@@ -30,6 +30,9 @@ spec:
       containers:
         - name: jenkins
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          ports:
+            - containerPort: 8080
+            - containerPort: 50000
           volumeMounts:
             # see https://github.com/jenkinsci/docker/blob/master/README.md#usage
             - mountPath: "/var/jenkins_home"
