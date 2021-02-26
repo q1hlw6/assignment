@@ -1,0 +1,7 @@
+image:
+  registry: ""
+  repository: sample
+  tag: latest
+
+ingress:
+  enabled: false
