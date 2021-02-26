@@ -81,3 +81,13 @@ The only required value is the ECR registry name:
 DOCKER_REGISTRY_NAME=123456789012.dkr.ecr.eu-west-1.amazonaws.com
 helm install -n default sample ./helm/sample --set image.registry=$DOCKER_REGISTRY_NAME
 ```
+
+## Notes
+
+Lots of possible small improvements are not relevant for this assignment, but a few large ones should be mentioned explicitly:
+
+* The `Jenkinsfile` for the sample application builds the Docker image with a container that mounts the Docker socket from the host, which is known as Docker-outside-of-Docker. This is simple to implement, but it also creates a major security issue, and it is not particularly reliable. Alternatives range from using plain EC2 instances as Jenkins build executors to tools like Kaniko.
+* All components run in the same (`default`) namespace when following the instructions above. This is convenient for demonstration purposes but not a good practice in production.
+* The Jenkins master Service Account has "edit" rights in its own namespace which should be restricted, and should be applied to a separate namespace.
+* Configuring Jenkins automatically is possible but not exactly trivial. For someone with previous experience the steps above only take a few minutes so this is often not worth the investment.
+* The sample application pipeline should end with a deployment stage!
