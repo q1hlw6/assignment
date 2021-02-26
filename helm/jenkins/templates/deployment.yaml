@@ -21,6 +21,7 @@ spec:
         app.kubernetes.io/instance: "{{ .Release.Name }}"
         app.kubernetes.io/component: master
     spec:
+      serviceAccountName: "{{ .Release.Name }}-master"
       securityContext:
         fsGroup: 1000
       volumes:
